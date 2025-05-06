@@ -2,116 +2,54 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>صفحة معاينة الأكواد مع ذكاء اصطناعي</title>
+  <title>مساعد الذكاء الاصطناعي</title>
   <style>
-    body { font-family: sans-serif; background: #f4f4f4; padding: 20px; direction: rtl; }
-    .editor-container { position: relative; width: 100%; }
-    textarea, input[type="text"] {
-      width: 100%;
-      margin-bottom: 10px;
-      font-family: monospace;
-      padding: 10px;
-      box-sizing: border-box;
-      resize: vertical;
-    }
-    textarea { height: 150px; }
-    .clear-btn, .paste-btn {
-      position: absolute;
-      top: 10px;
-      font-size: 16px;
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      z-index: 1;
-    }
-    .clear-btn { left: 10px; }
-    .paste-btn { left: 60px; background: #3498db; }
-    iframe {
-      width: 100%;
-      height: 300px;
-      border: 1px solid #ccc;
-      background: white;
-    }
-    button.run-btn, button.ai-btn {
-      padding: 10px 20px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    button.ai-btn { background: #27ae60; color: white; }
+    body { font-family: sans-serif; text-align: center; padding: 20px; direction: rtl; background-color: #f4f4f4; }
+    textarea, input { width: 90%; margin: 10px 0; padding: 10px; font-size: 16px; }
+    button { padding: 10px 20px; font-size: 18px; }
+    .output { background: #fff; padding: 15px; border: 1px solid #ccc; min-height: 100px; margin-top: 20px; }
   </style>
 </head>
 <body>
-
-  <h2>اكتب كود HTML/CSS/JS ثم اضغط معاينة</h2>
-  <div class="editor-container">
-    <textarea id="codeArea" placeholder="اكتب الكود هنا..."></textarea>
-    <button class="clear-btn" onclick="clearCode()">×</button>
-    <button class="paste-btn" onclick="pasteCode()">لصق</button>
-  </div>
-
-  <h3>اطلب كود من الذكاء الاصطناعي:</h3>
-  <input type="text" id="aiPrompt" placeholder="مثال: أنشئ صفحة فيها زر أخضر يفتح رابط في نافذة جديدة">
-  <button class="ai-btn" onclick="getCodeFromAI()">مساعدة بالذكاء الاصطناعي</button>
-
-  <br>
-  <button class="run-btn" onclick="runCode()">معاينة</button>
-
-  <h3>المعاينة:</h3>
-  <iframe id="preview"></iframe>
+  <h1>اكتب سؤالك للذكاء الاصطناعي</h1>
+  <textarea id="prompt" rows="4" placeholder="اكتب سؤالك هنا..."></textarea><br>
+  <input type="text" id="apikey" placeholder="أدخل مفتاح OpenAI API هنا"><br>
+  <button onclick="askAI()">إرسال</button>
+  <div class="output" id="response">الرد سيظهر هنا...</div>
 
   <script>
-    const apiKey = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    async function askAI() {
+      const prompt = document.getElementById("prompt").value;
+      const key = document.getElementById("apikey").value;
+      const resBox = document.getElementById("response");
 
-    function runCode() {
-      const code = document.getElementById('codeArea').value;
-      const iframe = document.getElementById('preview');
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write(code);
-      doc.close();
-    }
+      if (!prompt || !key) {
+        resBox.textContent = "يرجى كتابة السؤال وإدخال مفتاح API.";
+        return;
+      }
 
-    function clearCode() {
-      document.getElementById('codeArea').value = '';
-    }
+      resBox.textContent = "جاري المعالجة...";
 
-    async function pasteCode() {
       try {
-        const text = await navigator.clipboard.readText();
-        document.getElementById('codeArea').value = text;
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + key
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: prompt }],
+            max_tokens: 1000
+          })
+        });
+
+        const data = await response.json();
+        resBox.textContent = data.choices?.[0]?.message?.content || "لم يتم العثور على رد.";
       } catch (err) {
-        alert('فشل في الوصول إلى الحافظة: ' + err);
+        resBox.textContent = "حدث خطأ: " + err.message;
       }
     }
-
-    async function getCodeFromAI() {
-      const prompt = document.getElementById("aiPrompt").value;
-      if (!prompt) return alert("اكتب وصفًا لما تريده");
-
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: "gpt-4",
-          messages: [
-            { role: "system", content: "أنت مساعد خبير في إنشاء أكواد HTML/CSS/JS" },
-            { role: "user", content: prompt }
-          ],
-          temperature: 0.5
-        })
-      });
-
-      const data = await response.json();
-      const code = data.choices[0].message.content;
-      document.getElementById("codeArea").value = code;
-    }
   </script>
-
 </body>
 </html>
