@@ -1,67 +1,66 @@
-# php.js
+# Locutus
 
-<!-- badges/ -->
-[![Build Status](https://secure.travis-ci.org/kvz/phpjs.png?branch=master)](http://travis-ci.org/kvz/phpjs "Check this project's build status on TravisCI")
-[![NPM version](http://badge.fury.io/js/phpjs.png)](https://npmjs.org/package/phpjs "View this project on NPM")
-[![Dependency Status](https://david-dm.org/kvz/phpjs.png?theme=shields.io)](https://david-dm.org/kvz/phpjs)
-[![Development Dependency Status](https://david-dm.org/kvz/phpjs/dev-status.png?theme=shields.io)](https://david-dm.org/kvz/phpjs#info=devDependencies)
-<!-- /badges -->
+> All your standard libraries will be assimilated into our JavaScript collective. Resistance is futile.
 
-php.js is a resource that offers community-built JavaScript alternatives to PHP functions.
+Welcome to Locutus, where the boundaries of coding languages blur. We're a dedicated collective developers on a mission
+to explore the possibilities of porting standard libraries from various programming language (Go, Ruby, PHP, C) to
+JavaScript. Our journey is one of discovery, innovation, and sometimes, delightful chaos.
 
-More info at: http://phpjs.org/about
+From the complex to the quirky, we assimilate libraries with a spirit of curiosity and a penchant for experimentation.
+Our creations typically start as rainy Sunday afternoon puzzles, and end up ranging from groundbreaking functions that
+enhance the JavaScript ecosystem, to unique oddities that challenge the norms of coding.
 
-## Npm
+As we navigate through this uncharted territory, we invite you to join us. Whether to contribute, learn, or simply
+marvel at the wonders of cross-language integration and portability, your presence on GitHub is valued.
+
+Embark on this journey with us at [locutus.io](https://locutus.io/).
+
+Use our creations at your own risk, and may they inspire you to push the boundaries of what's possible with JavaScript.
+
+## Table of contents
+
+- [Install](#install)
+- [Use](#use)
+- [Development](#development)
+
+## Install
 
 ```bash
-$ mkdir test && cd $_
-$ npm install phpjs
-$ $EDITOR try.js
+yarn add locutus
+```
+
+## Use
+
+```bash
+$ vim php.js
 ```
 
 ```javascript
-var php = require('phpjs');
-
-php.echo(php.sprintf('Hey, %s : )', 'you'));
-php.echo(php.parse_url('mysql://kevin:abcd1234@example.com/databasename')['pass']);
-php.echo(php.strtotime('2 januari 2012, 11:12:13 GMT'));
+const sprintf = require('locutus/php/strings/sprintf')
+const echo = require('locutus/php/strings/echo')
+const effectiveness = 'futile'
+echo(sprintf('Resistance is %s', effectiveness))
 ```
 
 ```bash
-$ node try.js
-Hey, you : )
-abcd1234
-1325502733
-```
-
-## Testing
-
-
-### cli
-
-```bash
-make test
+$ node php.js
+Resistance is futile
 ```
 
 ```bash
-node bin/phpjs.js --action test --name sort
-node bin/phpjs.js --action test --category array
+$ vim go.js
 ```
 
-### Web
+```javascript
+const strings = require('locutus/golang/strings')
+console.log(strings.Contains('Locutus', 'cut'))
+```
 
 ```bash
-PORT=8080 node test/browser/server.js
+$ node go.js
+true
 ```
 
-Point your webbrowser to http://localhost:8080
+## Development
 
-
-## Sponsor development
-
-<!-- badges/ -->
-[![Gittip donate button](http://img.shields.io/gittip/kvz.png)](https://www.gittip.com/kvz/ "Sponsor the development of phpjs via Gittip")
-[![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](https://flattr.com/submit/auto?user_id=kvz&url=https://github.com/kvz/phpjs&title=phpjs&language=&tags=github&category=software "Sponsor the development of phpjs via Flattr")
-[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=kevin%40vanzonneveld%2enet&lc=NL&item_name=Open%20source%20donation%20to%20Kevin%20van%20Zonneveld&currency_code=USD&bn=PP-DonationsBF%3abtn_donate_SM%2egif%3aNonHosted "Sponsor the development of phpjs via Paypal")
-[![BitCoin donate button](http://img.shields.io/bitcoin/donate.png?color=yellow)](https://coinbase.com/checkouts/19BtCjLCboRgTAXiaEvnvkdoRyjd843Dg2 "Sponsor the development of phpjs via BitCoin")
-<!-- /badges -->
+Some guidelines and instructions can be found in [CONTRIBUTING.md](CONTRIBUTING.md)
